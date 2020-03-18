@@ -30,7 +30,10 @@ namespace SuperheroCreator.Controllers
         // GET: Superhero/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            //Superhero superhero = new Superhero();
+            //superhero.SuperheroId = id;
+            var superhero = _context.Superheroes.Where(s => s.SuperheroId == id).Single();
+            return View(superhero);
         }
 
         // GET: Superhero/Create
@@ -61,7 +64,9 @@ namespace SuperheroCreator.Controllers
         // GET: Superhero/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Superhero superhero = new Superhero();
+            superhero.SuperheroId = id;
+            return View(superhero);
         }
 
         // POST: Superhero/Edit/5
@@ -69,17 +74,25 @@ namespace SuperheroCreator.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Superhero superhero)
         {
-            Superhero newHero = new Superhero();
             try
             {
                 // TODO: Add update logic here
+                Superhero newHero = new Superhero();
                 newHero = _context.Superheroes.Where(a => a.SuperheroId == superhero.SuperheroId).Single();
+                newHero.SuperheroId = superhero.SuperheroId;
+                newHero.Name = superhero.Name;
+                newHero.AlterEgoName = superhero.AlterEgoName;
+                newHero.PrimarySuperpower = superhero.PrimarySuperpower;
+                newHero.SecondarySuperpower = superhero.SecondarySuperpower;
+                newHero.CatchPhrase = superhero.CatchPhrase;
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+
         }
 
         // GET: Superhero/Delete/5
