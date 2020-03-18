@@ -14,6 +14,8 @@ namespace SuperheroCreator.Controllers
         public ApplicationDbContext _context;
         private object context;
 
+        public object Superheroes { get; private set; }
+
         public SuperheroController(ApplicationDbContext context)
         {
             _context = context;
@@ -21,7 +23,8 @@ namespace SuperheroCreator.Controllers
         // GET: Superhero
         public ActionResult Index()
         {
-            return View();
+            var superhero = _context.Superheroes;
+            return View(superhero);
         }
 
         // GET: Superhero/Details/5
@@ -64,12 +67,13 @@ namespace SuperheroCreator.Controllers
         // POST: Superhero/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Superhero superhero)
         {
+            Superhero newHero = new Superhero();
             try
             {
                 // TODO: Add update logic here
-
+                newHero = _context.Superheroes.Where(a => a.SuperheroId == superhero.SuperheroId).Single();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -81,18 +85,21 @@ namespace SuperheroCreator.Controllers
         // GET: Superhero/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Superhero superhero = new Superhero();
+            superhero.SuperheroId = id;
+            return View(superhero);
         }
 
         // POST: Superhero/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Superhero superhero)
         {
             try
             {
                 // TODO: Add delete logic here
-
+                _context.Superheroes.Remove(superhero);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
